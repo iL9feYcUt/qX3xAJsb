@@ -1,242 +1,88 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Year Progress (Win11)</title>
-    <style>
-        :root {
-            --win-blue: #0067C0;
-            --win-blue-hover: #005a9e;
-            --win-bg: #f3f3f3;
-            --card-bg: #ffffff;
-            --text-main: #202020;
-            --text-sub: #5d5d5d;
-            --track-color: #e0e0e0;
-            --radius-window: 12px;
-            --radius-control: 4px;
-            --shadow-depth: 0 8px 32px rgba(0, 0, 0, 0.08);
-        }
-
-        body {
-            /* Windows 11 Bloom壁紙風 */
-            background: linear-gradient(135deg, #eef2f3 0%, #dcecfb 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            height: 100dvh; /* アドレスバー対策 */
-            margin: 0;
-            font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
-            color: var(--text-main);
-            user-select: none;
-            overflow: hidden;
-        }
-
-        .fluent-card {
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            
-            /* カード幅のみレスポンシブ化（中身のバランスは変えない） */
-            width: 90%;
-            max-width: 420px;
-            
-            padding: 24px;
-            border-radius: var(--radius-window);
-            box-shadow: var(--shadow-depth);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            box-sizing: border-box;
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 4px;
-        }
-
-        .icon-box {
-            width: 40px;
-            height: 40px;
-            background-color: #e0f0ff;
-            color: var(--win-blue);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .title-group {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        h2 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .subtitle {
-            font-size: 12px;
-            color: var(--text-sub);
-        }
-
-        .progress-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .progress-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .progress-track {
-            height: 6px;
-            width: 100%;
-            background-color: var(--track-color);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--win-blue);
-            width: 0%;
-            border-radius: 10px;
-            transition: width 0.5s cubic-bezier(0.33, 1, 0.68, 1);
-        }
-
-        .detail-text {
-            font-size: 12px;
-            color: var(--text-sub);
-            text-align: right;
-        }
-
-        /* アクションエリア: Win11らしく右寄せ・コンパクトを維持 */
-        .actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 8px;
-            gap: 8px; /* ボタン同士の間隔のみ確保 */
-        }
-
-        .btn {
-            background-color: #ffffff;
-            border: 1px solid #d1d1d1;
-            /* サイズ感はPC版のまま維持 */
-            padding: 6px 24px;
-            border-radius: var(--radius-control);
-            font-size: 14px;
-            font-family: inherit;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: all 0.1s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn:hover {
-            background-color: #f6f6f6;
-            border-color: #b1b1b1;
-        }
-
-        .btn:active {
-            background-color: #ededed;
-            color: rgba(0,0,0,0.6);
-            transform: scale(0.98);
-        }
-        
-        .btn-primary {
-            background-color: var(--win-blue);
-            color: white;
-            border: 1px solid transparent;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--win-blue-hover);
-        }
-
-        /* スマホ向け調整: ボタンはいじらず、カード幅のみ微調整 */
-        @media (max-width: 480px) {
-            .fluent-card {
-                padding: 20px; /* 少しだけ余白を詰めるが、比率は守る */
-            }
-            /* ボタンの巨大化処理は削除しました */
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Year Progress (Win11)</title>
 </head>
 <body>
 
-    <div class="fluent-card">
-        <div class="header">
-            <div class="icon-box">📅</div>
-            <div class="title-group">
-                <h2 id="year-title">202X年</h2>
-                <span class="subtitle">システム更新の進行状況</span>
-            </div>
-        </div>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
 
-        <div class="progress-container">
-            <div class="progress-labels">
-                <span>進行中</span>
-                <span id="percentage-text">0%</span>
-            </div>
-            
-            <div class="progress-track">
-                <div class="progress-fill" id="progress-bar"></div>
-            </div>
-            
-            <div class="detail-text">
-                残り日数: <span id="remaining-days">--</span> 日
-            </div>
-        </div>
+/* ===== CSS 注入 ===== */
+const S=document.createElement('style');
+S.textContent=`
+:root{--a:#0067C0;--b:#005a9e;--e:#202020;--f:#5d5d5d;--g:#e0e0e0;--h:12px;--i:4px;--j:0 8px 32px rgba(0,0,0,.08)}
+body{background:linear-gradient(135deg,#eef2f3 0%,#dcecfb 100%);display:flex;justify-content:center;align-items:center;height:100vh;height:100dvh;margin:0;font-family:"Segoe UI Variable Display","Segoe UI",sans-serif;color:var(--e);user-select:none;overflow:hidden}
+.x{background:rgba(255,255,255,.85);backdrop-filter:blur(20px);width:90%;max-width:420px;padding:24px;border-radius:var(--h);box-shadow:var(--j);border:1px solid rgba(255,255,255,.5);display:flex;flex-direction:column;gap:16px;box-sizing:border-box}
+.y{display:flex;align-items:center;gap:12px}
+.z{width:40px;height:40px;background:#e0f0ff;color:var(--a);border-radius:8px;display:flex;justify-content:center;align-items:center;font-size:20px}
+.q{display:flex;flex-direction:column}
+h2{margin:0;font-size:16px;font-weight:600}
+.r{font-size:12px;color:var(--f)}
+.s{display:flex;flex-direction:column;gap:8px}
+.t{display:flex;justify-content:space-between;font-size:12px;font-weight:600}
+.u{height:6px;background:var(--g);border-radius:10px;overflow:hidden}
+.v{height:100%;background:var(--a);width:0%;transition:width .5s cubic-bezier(.33,1,.68,1)}
+.w{font-size:12px;color:var(--f);text-align:right}
+.m{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.n{background:#fff;border:1px solid #d1d1d1;padding:6px 24px;border-radius:var(--i);font-size:14px;cursor:pointer}
+.n:hover{background:#f6f6f6}
+.n:active{background:#ededed;transform:scale(.98)}
+.o{background:var(--a);color:#fff;border:none}
+.o:hover{background:var(--b)}
+@media(max-width:480px){.x{padding:20px}}
+`;
+document.head.appendChild(S);
+const E=(t,c)=>{const e=document.createElement(t);c&&e.classList.add(c);return e};
 
-        <div class="actions">
-            <button class="btn" onclick="alert('時間は止められません...')">一時停止</button>
-            <button class="btn btn-primary" onclick="location.reload()">更新</button>
-        </div>
-    </div>
+const card=E('div','x');
 
-    <script>
-        function updateFluentProgress() {
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const startOfYear = new Date(currentYear, 0, 1);
-            const startOfNextYear = new Date(currentYear + 1, 0, 1);
-            
-            const totalDuration = startOfNextYear - startOfYear;
-            const elapsed = now - startOfYear;
-            const remaining = startOfNextYear - now;
-            
-            const percent = (elapsed / totalDuration) * 100;
-            const percentDisplay = percent.toFixed(1);
+const head=E('div','y');
+const icon=E('div','z'); icon.textContent='📅';
+const tg=E('div','q');
+const h2=document.createElement('h2'); h2.id='a1';
+const sub=E('span','r'); sub.textContent='システム更新の進行状況';
+tg.append(h2,sub); head.append(icon,tg);
 
-            const remainingDays = Math.ceil(remaining / (1000 * 60 * 60 * 24));
+const prog=E('div','s');
+const labels=E('div','t');
+const sp1=document.createElement('span'); sp1.textContent='進行中';
+const sp2=document.createElement('span'); sp2.id='a2';
+labels.append(sp1,sp2);
 
-            document.getElementById('year-title').textContent = currentYear + "年";
-            document.getElementById('progress-bar').style.width = percent + '%';
-            document.getElementById('percentage-text').textContent = percentDisplay + '%';
-            document.getElementById('remaining-days').textContent = remainingDays;
+const track=E('div','u');
+const fill=E('div','v'); fill.id='a3'; track.append(fill);
 
-            requestAnimationFrame(updateFluentProgress);
-        }
+const detail=E('div','w');
+detail.innerHTML='残り日数: <span id="a4">--</span> 日';
 
-        updateFluentProgress();
-    </script>
+prog.append(labels,track,detail);
+
+const act=E('div','m');
+const b1=E('button','n'); b1.textContent='一時停止';
+b1.onclick=()=>alert('不明なエラーが発生しました');
+const b2=E('button','n'); b2.classList.add('o');
+b2.textContent='更新'; b2.onclick=()=>location.reload();
+
+act.append(b1,b2);
+card.append(head,prog,act);
+document.body.appendChild(card);
+const loop=()=>{
+  const d=new Date(),y=d.getFullYear(),
+        s=new Date(y,0,1),e=new Date(y+1,0,1),
+        p=(d-s)/(e-s)*100,
+        r=Math.ceil((e-d)/864e5);
+  a1.textContent=y+'年';
+  a3.style.width=p+'%';
+  a2.textContent=p.toFixed(1)+'%';
+  a4.textContent=r;
+  requestAnimationFrame(loop);
+};
+loop();
+
+});
+</script>
 </body>
 </html>
