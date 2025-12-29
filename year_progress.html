@@ -19,28 +19,26 @@
         }
 
         body {
-            /* Windows 11 Bloom壁紙風グラデーション */
+            /* Windows 11 Bloom壁紙風 */
             background: linear-gradient(135deg, #eef2f3 0%, #dcecfb 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            /* モバイルブラウザのアドレスバー対策 (dvh) */
             height: 100vh;
-            height: 100dvh;
+            height: 100dvh; /* アドレスバー対策 */
             margin: 0;
             font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
             color: var(--text-main);
-            user-select: none; /* テキスト選択防止（アプリっぽくする） */
-            overflow: hidden; /* スクロール防止 */
+            user-select: none;
+            overflow: hidden;
         }
 
-        /* アクリル/マイカ風カードデザイン */
         .fluent-card {
             background-color: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             
-            /* レスポンシブ対応: 画面の90%幅、ただし最大420px */
+            /* カード幅のみレスポンシブ化（中身のバランスは変えない） */
             width: 90%;
             max-width: 420px;
             
@@ -51,10 +49,9 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            box-sizing: border-box; /* パディングを含めたサイズ計算 */
+            box-sizing: border-box;
         }
 
-        /* ヘッダーエリア */
         .header {
             display: flex;
             align-items: center;
@@ -95,7 +92,6 @@
             color: var(--text-sub);
         }
 
-        /* プログレスバー */
         .progress-container {
             display: flex;
             flex-direction: column;
@@ -116,7 +112,6 @@
             background-color: var(--track-color);
             border-radius: 10px;
             overflow: hidden;
-            position: relative;
         }
 
         .progress-fill {
@@ -133,17 +128,18 @@
             text-align: right;
         }
 
-        /* アクションボタンエリア */
+        /* アクションエリア: Win11らしく右寄せ・コンパクトを維持 */
         .actions {
             display: flex;
             justify-content: flex-end;
             margin-top: 8px;
-            gap: 8px;
+            gap: 8px; /* ボタン同士の間隔のみ確保 */
         }
 
         .btn {
             background-color: #ffffff;
             border: 1px solid #d1d1d1;
+            /* サイズ感はPC版のまま維持 */
             padding: 6px 24px;
             border-radius: var(--radius-control);
             font-size: 14px;
@@ -151,7 +147,7 @@
             color: var(--text-main);
             cursor: pointer;
             transition: all 0.1s ease;
-            -webkit-tap-highlight-color: transparent; /* タップ時の青背景削除 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .btn:hover {
@@ -175,23 +171,12 @@
             background-color: var(--win-blue-hover);
         }
 
-        /* スマホ向け調整 (画面幅480px以下) */
+        /* スマホ向け調整: ボタンはいじらず、カード幅のみ微調整 */
         @media (max-width: 480px) {
             .fluent-card {
-                padding: 20px;
+                padding: 20px; /* 少しだけ余白を詰めるが、比率は守る */
             }
-
-            .btn {
-                padding: 12px 0; /* タップしやすいよう高さを確保 */
-                flex: 1;         /* ボタンを横幅いっぱいに広げる */
-                text-align: center;
-                font-size: 16px; /* 文字サイズも少し大きく */
-            }
-            
-            .actions {
-                justify-content: space-between;
-                width: 100%;
-            }
+            /* ボタンの巨大化処理は削除しました */
         }
     </style>
 </head>
@@ -238,20 +223,13 @@
             const elapsed = now - startOfYear;
             const remaining = startOfNextYear - now;
             
-            // パーセンテージ計算
             const percent = (elapsed / totalDuration) * 100;
             const percentDisplay = percent.toFixed(1);
 
-            // 残り日数
             const remainingDays = Math.ceil(remaining / (1000 * 60 * 60 * 24));
 
-            // DOM更新
             document.getElementById('year-title').textContent = currentYear + "年";
-            
-            // アニメーション更新
-            const progressBar = document.getElementById('progress-bar');
-            progressBar.style.width = percent + '%';
-            
+            document.getElementById('progress-bar').style.width = percent + '%';
             document.getElementById('percentage-text').textContent = percentDisplay + '%';
             document.getElementById('remaining-days').textContent = remainingDays;
 
