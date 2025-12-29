@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Year Progress (Win11)</title>
     <style>
         :root {
@@ -12,31 +12,38 @@
             --card-bg: #ffffff;
             --text-main: #202020;
             --text-sub: #5d5d5d;
-            --track-color: #e0e0e0; /* プログレスバーの背景 */
+            --track-color: #e0e0e0;
             --radius-window: 12px;
             --radius-control: 4px;
             --shadow-depth: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
 
         body {
-            /* Windows 11のBloom壁紙をイメージした淡いグラデーション */
+            /* Windows 11 Bloom壁紙風グラデーション */
             background: linear-gradient(135deg, #eef2f3 0%, #dcecfb 100%);
             display: flex;
             justify-content: center;
             align-items: center;
+            /* モバイルブラウザのアドレスバー対策 (dvh) */
             height: 100vh;
+            height: 100dvh;
             margin: 0;
             font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
             color: var(--text-main);
-            user-select: none;
+            user-select: none; /* テキスト選択防止（アプリっぽくする） */
+            overflow: hidden; /* スクロール防止 */
         }
 
         /* アクリル/マイカ風カードデザイン */
         .fluent-card {
             background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px); /* すりガラス効果 */
+            backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            width: 420px;
+            
+            /* レスポンシブ対応: 画面の90%幅、ただし最大420px */
+            width: 90%;
+            max-width: 420px;
+            
             padding: 24px;
             border-radius: var(--radius-window);
             box-shadow: var(--shadow-depth);
@@ -44,6 +51,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+            box-sizing: border-box; /* パディングを含めたサイズ計算 */
         }
 
         /* ヘッダーエリア */
@@ -64,17 +72,22 @@
             justify-content: center;
             align-items: center;
             font-size: 20px;
+            flex-shrink: 0;
         }
 
         .title-group {
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         h2 {
             margin: 0;
             font-size: 16px;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .subtitle {
@@ -98,10 +111,10 @@
         }
 
         .progress-track {
-            height: 6px; /* Win11は細め */
+            height: 6px;
             width: 100%;
             background-color: var(--track-color);
-            border-radius: 10px; /* ピル型 */
+            border-radius: 10px;
             overflow: hidden;
             position: relative;
         }
@@ -111,7 +124,7 @@
             background-color: var(--win-blue);
             width: 0%;
             border-radius: 10px;
-            transition: width 0.3s cubic-bezier(0.33, 1, 0.68, 1); /* 自然なイージング */
+            transition: width 0.5s cubic-bezier(0.33, 1, 0.68, 1);
         }
 
         .detail-text {
@@ -120,11 +133,12 @@
             text-align: right;
         }
 
-        /* ボタングループ */
+        /* アクションボタンエリア */
         .actions {
             display: flex;
             justify-content: flex-end;
             margin-top: 8px;
+            gap: 8px;
         }
 
         .btn {
@@ -137,6 +151,7 @@
             color: var(--text-main);
             cursor: pointer;
             transition: all 0.1s ease;
+            -webkit-tap-highlight-color: transparent; /* タップ時の青背景削除 */
         }
 
         .btn:hover {
@@ -150,7 +165,6 @@
             transform: scale(0.98);
         }
         
-        /* 強調ボタン */
         .btn-primary {
             background-color: var(--win-blue);
             color: white;
@@ -161,6 +175,24 @@
             background-color: var(--win-blue-hover);
         }
 
+        /* スマホ向け調整 (画面幅480px以下) */
+        @media (max-width: 480px) {
+            .fluent-card {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 12px 0; /* タップしやすいよう高さを確保 */
+                flex: 1;         /* ボタンを横幅いっぱいに広げる */
+                text-align: center;
+                font-size: 16px; /* 文字サイズも少し大きく */
+            }
+            
+            .actions {
+                justify-content: space-between;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -191,7 +223,7 @@
 
         <div class="actions">
             <button class="btn" onclick="alert('時間は止められません...')">一時停止</button>
-            <button class="btn btn-primary" style="margin-left: 8px;" onclick="location.reload()">更新</button>
+            <button class="btn btn-primary" onclick="location.reload()">更新</button>
         </div>
     </div>
 
@@ -206,7 +238,7 @@
             const elapsed = now - startOfYear;
             const remaining = startOfNextYear - now;
             
-            // パーセンテージ計算 (Win11はシンプルさを好むため小数点1桁)
+            // パーセンテージ計算
             const percent = (elapsed / totalDuration) * 100;
             const percentDisplay = percent.toFixed(1);
 
@@ -215,7 +247,11 @@
 
             // DOM更新
             document.getElementById('year-title').textContent = currentYear + "年";
-            document.getElementById('progress-bar').style.width = percent + '%';
+            
+            // アニメーション更新
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = percent + '%';
+            
             document.getElementById('percentage-text').textContent = percentDisplay + '%';
             document.getElementById('remaining-days').textContent = remainingDays;
 
