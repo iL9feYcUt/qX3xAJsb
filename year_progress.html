@@ -6,6 +6,7 @@
 <title>Year Progress</title>
 </head>
 <body>
+
 <script>
 document.addEventListener('DOMContentLoaded',()=>{
 const S=document.createElement('style');
@@ -71,9 +72,13 @@ const loop=()=>{
         s=new Date(y,0,1),e=new Date(y+1,0,1),
         p=(d-s)/(e-s)*100,
         r=Math.ceil((e-d)/864e5);
+        
+  // 小数第二位切り捨てロジック
+  const pFormatted = (Math.floor(p * 10) / 10).toFixed(1);
+
   a1.textContent=y+'年';
   a3.style.width=p+'%';
-  a2.textContent=p.toFixed(1)+'%';
+  a2.textContent=pFormatted+'%';
   a4.textContent=r;
   requestAnimationFrame(loop);
 };
